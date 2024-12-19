@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Простой чат</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #messages {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        #input {
+            width: 80%;
+            padding: 10px;
+            margin-top: 10px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px;
+            width: 15%;
+        }
+        .message {
+            margin-bottom: 10px;
+        }
+        .timestamp {
+            font-size: 0.8em;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <h1>Простой чат</h1>
+
+    <div id="messages"></div>
+
+    <input type="text" id="input" placeholder="Введите сообщение..." required>
+    <button onclick="sendMessage()">Отправить</button>
+
+    <script>
+        // Функция для загрузки сообщений из localStorage
+        function loadMessages() {
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.innerHTML = ''; // Очищаем текущее содержимое
+            const messages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+            messages.forEach(msg => {
+                const msgDiv = document.createElement('div');
+                msgDiv.classList.add('message');
+                msgDiv.innerHTML = `<strong>${msg.user}</strong>: ${msg.text} <span class="timestamp">(${msg.time})</span>`;
+                messagesDiv.appendChild(msgDiv);
+            });
+        }
+
+        // Функция для отправки сообщения
+        function sendMessage() {
+            const input = document.getElementById('input');
+            const message = input.value.trim();
+            if (message) {
+                const user = 'Пользователь'; // Можно заменить на имя пользователя
+                const time = new Date().toLocaleString();
+
+                // Получаем текущие сообщения
+                const messages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+
+                // Добавляем новое сообщение
+                messages.push({ user, text: message, time });
+
+                // Сохраняем сообщения в localStorage
+                localStorage.setItem('chatMessages', JSON.stringify(messages));
+
+                // Загружаем и обновляем отображение сообщений
+                loadMessages();
+
+                // Очищаем поле ввода
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        // Загрузка сообщений при загрузке страницы
+        loadMessages();
+    </script>
+</body>
+</html>
+
