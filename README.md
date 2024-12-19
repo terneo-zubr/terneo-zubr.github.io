@@ -1,1 +1,0 @@
-# terneo-zubr.github.io
